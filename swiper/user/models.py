@@ -27,3 +27,15 @@ class User(models.Model):
     avatar = models.CharField(max_length=256,verbose_name='头像')
     class Meta:
         db_table = 'user'
+
+    def to_dict(self):
+        return {
+            'phonenum':self.phonenum,
+            'nickname':self.nickname,
+            'gender':self.gender,
+            'birthday':str(self.birthday),  # 注意时间需要强转 str
+            'location':self.location,
+            'avatar':self.avatar,
+
+
+        }
