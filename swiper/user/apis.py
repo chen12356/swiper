@@ -6,6 +6,7 @@ from swiper.common import stat
 from swiper.user import logics
 from swiper.user.models import User, Profile
 
+from swiper.libs.http import render_json
 
 def get_vcode(request):
     """点击获取验证码-->用户会收到信息"""
@@ -13,8 +14,8 @@ def get_vcode(request):
     status = logics.send_vcode(phonenum)
     if status:
         # 返回的状态码--> 规定的 stat里面状态码的变量
-        return JsonResponse({'code':stat.OK,'data':None})
-    return JsonResponse({'code':stat.VCODE_ERR,'data':None})
+        return render_json()
+    return render_json(code=stat.VCODE_ERR)
 
 def submit_vcode(request):
     """通过验证码和手机 登录"""
@@ -31,8 +32,8 @@ def submit_vcode(request):
 
         #执行登陆过程--> 将用户id保存在session中
         request.session['uid'] = user.id
-        return JsonResponse({'code':stat.OK,'data':user.to_dict()})
-    return JsonResponse({'code':stat.VCODE_ERR,'data':'验证失败'})
+        return render_json(user.to_dict())
+    return render_json(code=stat.VCODE_ERR)
 
 def get_profile(request):
     """获取个人资料"""
@@ -41,4 +42,4 @@ def get_profile(request):
 
     #获取uid，如果是新创建的，那么需要先存入数据库，在读取，如果已经存在了，那么直接读取
     profile, _ = Profile.objects.get_or_create(id=request.uid)
-    return JsonResponse({'code':stat.OK,'data':profile.to_dict()})
+    return render_json(profile.to_dict())
