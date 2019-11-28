@@ -32,8 +32,9 @@ def send_vcode(phone):
     response = requests.post(config.YZX_SMS_API,json=args)
     if response.status_code == 200:
         result = response.json()   #转成json数据
-        if result['msg'] == 'ok':
+        print(result)
+        if result['msg'] == 'OK':
             # 设置到缓存中：本项目缓存到redis中,过期时间300s，注意：设置的key名尽可能顾名思义
-            cache.set("vcode-%s" % phone,vcode,timeout=300)
+            cache.set("vcode-%s" % phone,vcode,timeout=3000)
             return True
     return False

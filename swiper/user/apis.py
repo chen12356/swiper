@@ -3,10 +3,12 @@ from django.core.cache import cache
 
 # Create your views here.
 from common import stat
-from user import logics
 from user.models import User, Profile
-
 from libs.http import render_json
+from user import logics
+
+from user.forms import UserForm, ProfileForm
+
 
 def get_vcode(request):
     """点击获取验证码-->用户会收到信息"""
@@ -14,8 +16,6 @@ def get_vcode(request):
     status = logics.send_vcode(phonenum)
     if status:
         # 返回的状态码--> 规定的 stat里面状态码的变量
-
-        print('xxxxx')
         return render_json()
     return render_json(code=stat.VCODE_ERR)
 
@@ -48,9 +48,19 @@ def get_profile(request):
 
 def set_profile(request):
     '''修改个人资料'''
+    user_form = UserForm(request.POST)
+    profile_form = ProfileForm(request.POST)
 
-    return None
+    #检查 数据 有效性
+    if not user_form.is_valid():
+        return render_json(user_form.errors,stat.USER_FORM_ERR)
+    if not profile_form.is_valid():
+        return render_json(profile_form.errors,stat.PROFILE_FORM_ERR)
 
+    #保存数据   利用update方法，进行更新--> 参数：字段=值 --> 这里用 ** 拆包字典，一次性传过去
+    User.objects.filter(id=request.uid).update(**user_form.cleaned_data)
+    Profile.objects.filter(id=request.uid).update(**profile_form.cleaned_data)
 
+    return render_json()
 def upload_avatar(request):
     return None

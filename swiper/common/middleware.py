@@ -1,5 +1,4 @@
 from  django.utils.deprecation import MiddlewareMixin
-from django.http import JsonResponse
 
 from common import stat
 from libs.http import render_json
@@ -8,8 +7,8 @@ class AuthMiddleware(MiddlewareMixin):
 
     #创建白名单：有些页面并不需要验证
     path_white_list = [
-        'api/user/get_vcode',
-        'api/user/submit_vcode',
+        '/api/user/get_vcode/',
+        '/api/user/submit_vcode/',
     ]
 
     def process_request(self,request):
