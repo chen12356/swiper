@@ -6,7 +6,7 @@ import random
 import requests
 from django.core.cache import cache
 
-from swiper.swiper import config
+from swiper import config
 def get_random_code(length=6):
     """
     生成指定长度随机验证码

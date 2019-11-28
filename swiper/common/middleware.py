@@ -1,8 +1,8 @@
 from  django.utils.deprecation import MiddlewareMixin
 from django.http import JsonResponse
 
-from swiper.common import stat
-from swiper.libs.http import render_json
+from common import stat
+from libs.http import render_json
 class AuthMiddleware(MiddlewareMixin):
     #用户登陆验证的中间件，在一些接口验证用户是否登陆
 
