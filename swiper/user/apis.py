@@ -2,11 +2,11 @@ from django.http import JsonResponse
 from django.core.cache import cache
 
 # Create your views here.
-from swiper.common import stat
-from swiper.user import logics
-from swiper.user.models import User, Profile
+from common import stat
+from user import logics
+from user.models import User, Profile
 
-from swiper.libs.http import render_json
+from libs.http import render_json
 
 def get_vcode(request):
     """点击获取验证码-->用户会收到信息"""
@@ -14,6 +14,8 @@ def get_vcode(request):
     status = logics.send_vcode(phonenum)
     if status:
         # 返回的状态码--> 规定的 stat里面状态码的变量
+
+        print('xxxxx')
         return render_json()
     return render_json(code=stat.VCODE_ERR)
 
@@ -43,3 +45,12 @@ def get_profile(request):
     #获取uid，如果是新创建的，那么需要先存入数据库，在读取，如果已经存在了，那么直接读取
     profile, _ = Profile.objects.get_or_create(id=request.uid)
     return render_json(profile.to_dict())
+
+def set_profile(request):
+    '''修改个人资料'''
+
+    return None
+
+
+def upload_avatar(request):
+    return None
