@@ -105,3 +105,6 @@ venv.bak/
 
 #idea
 .idea/
+
+#qi_niu_yun
+.qiniu_pythonsdk_hostscache.json
