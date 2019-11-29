@@ -13,3 +13,10 @@ YZX_SMA_ARGS = {
     "param": None,  #  发送验证码内容
     "mobile": None,  # 接收手机号
 }
+
+
+#七牛云配置
+QN_AK = "NgSX0tJ0uzqKlL_zMkLeqbnFX7MWTn7lLjvzvYLe"
+QN_SK = "FV4S3xBqeJnT_h5NHx-RhEOfy5qVpH0dY32EtTqu"
+QN_BUCKET_NAME = "swiper1"
+QN_BASE_URL = " http://q1pprssob.bkt.clouddn.com"

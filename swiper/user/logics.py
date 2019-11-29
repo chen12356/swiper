@@ -35,6 +35,15 @@ def send_vcode(phone):
         print(result)
         if result['msg'] == 'OK':
             # 设置到缓存中：本项目缓存到redis中,过期时间300s，注意：设置的key名尽可能顾名思义
-            cache.set("vcode-%s" % phone,vcode,timeout=3000)
+            cache.set("vcode-%s" % phone,vcode,timeout=30000)
             return True
     return False
+
+def save_avatar(uid, avatar_file):
+    '''将个人形象保存到本地'''
+    filename = 'Avatar-%s' % uid  #拼接文件名
+    filepath = '/tmp/%s' % filename  #保存到本地的临时文件
+    with open(filepath, 'wb') as fp:
+        for chunk in avatar_file.chunks():
+            fp.write(chunk)
+    return filename, filepath
