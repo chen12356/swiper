@@ -1,6 +1,4 @@
-import os
 
-from django.http import JsonResponse
 from django.core.cache import cache
 
 # Create your views here.
