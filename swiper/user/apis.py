@@ -7,7 +7,7 @@ from django.core.cache import cache
 from common import stat
 from user.models import User, Profile
 from libs.http import render_json
-from libs.qn_cloud import upload_to_qiniu
+# from libs.qn_cloud import upload_to_qiniu
 from user import logics
 
 from user.forms import UserForm, ProfileForm
@@ -69,8 +69,9 @@ def set_profile(request):
 def upload_avatar(request):
     avatar_file = request.FILES.get('avatar')
     print(avatar_file)
-    filename,filepath = logics.save_avatar(request.uid,avatar_file) #保存到本地
-    avatar_url = upload_to_qiniu(filename,filepath)  # 上传到七牛云，同时得到远程图片的url
-    User.objects.filter(id=request.uid).update(avatar=avatar_url) # 保存到数据库中
-    os.remove(filepath) #删除本地临时文件
+    logics.upload_avatar.delay(request.uid,avatar_file)
+    # filename,filepath = logics.save_avatar(request.uid,avatar_file) #保存到本地
+    # avatar_url = upload_to_qiniu(filename,filepath)  # 上传到七牛云，同时得到远程图片的url
+    # User.objects.filter(id=request.uid).update(avatar=avatar_url) # 保存到数据库中
+    # os.remove(filepath) #删除本地临时文件
     return render_json()

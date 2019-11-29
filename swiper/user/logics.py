@@ -2,11 +2,14 @@
 本文件主要是编写其他功能的逻辑代码
 '''
 import random
-
+import os
 import requests
 from django.core.cache import cache
 
 from swiper import config
+from user.models import User
+from libs.qn_cloud import upload_to_qiniu
+from tasks import celery_app
 def get_random_code(length=6):
     """
     生成指定长度随机验证码
@@ -47,3 +50,15 @@ def save_avatar(uid, avatar_file):
         for chunk in avatar_file.chunks():
             fp.write(chunk)
     return filename, filepath
+
+#利用celery消息队列来除处理耗时的操作，比如用户服务器接收到客户头像，那么后续的
+#过程交给celery来 处理
+#该装饰后的函数，该函数被调用的的时候需要加 函数.delay(参数)  --》delay() 会使celery生效
+    # 先启动 celery任务，然后在启动django项目
+        # celery启动命令： celery worker -A 模块名(这里为 tasks) --loglevel=info
+@celery_app.task
+def upload_avatar(uid,avatar_file):
+    filename,filepath = save_avatar(uid,avatar_file) #保存到本地
+    avatar_url = upload_to_qiniu(filename,filepath)  # 上传到七牛云，同时得到远程图片的url
+    User.objects.filter(id=uid).update(avatar=avatar_url) # 保存到数据库中
+    os.remove(filepath) #删除本地临时文件
